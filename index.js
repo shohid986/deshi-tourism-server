@@ -46,7 +46,7 @@ async function run() {
       app.post('/orders/:id', async(req, res)=>{
         const order = req.body;
         const id = req.params.id;
-        order.status= 'pending';
+        order.status= 'Pending';
         order.id= id;
         const result = await ordersCollection.insertOne(order);
         console.log(`A document was inserted with the _id: ${result.insertedId}`);
@@ -57,11 +57,18 @@ async function run() {
       // update orders api
       app.put('/orders/:id', async(req, res)=>{
         const id = req.params.id;
-        const order = req.body;
-        console.log('update is hitting', id , order);
-        // const filter = {_id:ObjectId(id)};
-        // const result = await ordersCollection.updateOne(filter, order);
-        // res.json(result);
+        // const order = req.body;
+        // order.status = 'Active'
+        const filter = {_id: ObjectId(id)};
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: {
+            status: 'Active'
+          },
+        };
+        const result = await ordersCollection.updateOne(filter, updateDoc, options);
+        res.json(result);
+        console.log('update is hitting', id );
       })
 
       // get orders api
