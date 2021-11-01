@@ -27,6 +27,12 @@ async function run() {
         res.json(services);
       })
 
+      app.post('/services', async(req, res)=>{
+        const service = req.body;
+        const result = await serviceCollection.insertOne(service);
+        res.json(result);
+      })
+
       // service get api
       app.get('/service/:id', async(req, res)=>{
         const id = req.params.id;
@@ -57,8 +63,6 @@ async function run() {
       // update orders api
       app.put('/orders/:id', async(req, res)=>{
         const id = req.params.id;
-        // const order = req.body;
-        // order.status = 'Active'
         const filter = {_id: ObjectId(id)};
         const options = { upsert: true };
         const updateDoc = {
